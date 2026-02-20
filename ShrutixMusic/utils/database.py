@@ -38,29 +38,6 @@ playmode = {}
 playtype = {}
 skipmode = {}
 
-clone_db = mongo_client["ShrutixMusic"]["clones"]
-clone_settings = mongo_client["ShrutixMusic"]["clone_settings"]
-
-async def add_clone(token):
-    await clone_db.update_one({"token": token}, {"$set": {"token": token}}, upsert=True)
-
-async def remove_clone(token):
-    await clone_db.delete_one({"token": token})
-
-async def get_clones():
-    return clone_db.find()
-
-async def set_clone_data(token, key, value):
-    await clone_settings.update_one(
-        {"token": token},
-        {"$set": {key: value}},
-        upsert=True,
-    )
-
-async def get_clone_data(token, key):
-    data = await clone_settings.find_one({"token": token})
-    return data.get(key) if data else None
-
 async def get_assistant_number(chat_id: int) -> str:
     assistant = assistantdict.get(chat_id)
     return assistant
@@ -666,4 +643,5 @@ async def remove_banned_user(user_id: int):
     if not is_gbanned:
         return
     return await blockeddb.delete_one({"user_id": user_id})
+
 
